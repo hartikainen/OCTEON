@@ -36,3 +36,4 @@
 /forward/.cstamp-*
 /forward/forward
 /forward/forward-linux_64
+/forward/config/cvmx-config.h
