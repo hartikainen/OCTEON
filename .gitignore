@@ -30,3 +30,9 @@
 
 # Debug files
 *.dSYM/
+
+# OCTEON stamps
+/forward/obj-linux_64-octeon2/
+/forward/.cstamp-*
+/forward/forward
+/forward/forward-linux_64
