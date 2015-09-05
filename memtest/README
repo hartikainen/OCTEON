@@ -1,0 +1,15 @@
+# Memory tests for OCTEON II
+
+For simple-exec:
+   $ make
+
+For Linux:
+   $ make OCTEON_TARGET=linux_64
+
+# Running
+
+On simple-exec (for 32 cores):
+   # tftp $loadaddr memtest; bootoct $loadaddr coremask=ffffffff
+
+On Linux:
+   # ./memtest-linux_64
