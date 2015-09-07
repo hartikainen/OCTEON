@@ -1,0 +1,15 @@
+# Input benchmarks for OCTEON II
+
+For simple-exec:
+   $ make
+
+For Linux:
+   $ make OCTEON_TARGET=linux_64
+
+# Running
+
+On simple-exec (for 32 cores):
+   # tftp $loadaddr inputbm; bootoct $loadaddr coremask=ffffffff
+
+On Linux:
+   # ./inputbm-linux_64
