@@ -27,9 +27,10 @@
 #define IS_INIT_CORE (cvmx_is_init_core())
 
 #define PKT_BUF_CNT 1080
-#define SAMPLE_SIZE 10000
+#define SAMPLE_SIZE 1000
 
 #include "app.config"
+//#define TIME_DROPS
 
 void application_main_loop(void) {
   cvmx_wqe_t* work;
@@ -42,8 +43,6 @@ void application_main_loop(void) {
   uint64_t data_drop_T = 0, data_drop_T2 = 0;
   uint64_t wqe_drop_T = 0, wqe_drop_T2 = 0;
 
-  printf("Application main loop on core: %d\n", cvmx_get_core_num());
-
   while (1) {
     /* Time the work fetch */
     start_clock = cvmx_clock_get_count(CVMX_CLOCK_CORE);
@@ -54,9 +53,11 @@ void application_main_loop(void) {
     delta = end_clock - start_clock;
 
     if (work == NULL) {
-      work_fetch_no_work_T  += delta;
-      work_fetch_no_work_T2 += delta * delta;
-      no_work_N++;
+      if (got_work_N > 0) {
+        work_fetch_no_work_T  += delta;
+        work_fetch_no_work_T2 += delta * delta;
+        no_work_N++;
+      }
       continue;
     }
 
@@ -64,6 +65,7 @@ void application_main_loop(void) {
     work_fetch_got_work_T2 += delta * delta;
     got_work_N++;
 
+#ifdef TIME_DROPS
     /* Time the packet data drop */
     start_clock = cvmx_clock_get_count(CVMX_CLOCK_CORE);
 
@@ -86,7 +88,6 @@ void application_main_loop(void) {
     wqe_drop_T  += delta;
     wqe_drop_T2 += delta * delta;
 
-
     if (got_work_N > SAMPLE_SIZE) {
       printf("%d, %" PRIu64 ", %" PRIu64 ", %" PRIu64 ", %" PRIu64 ", %" PRIu64 ", %" PRIu64 ", %" PRIu64 ", %" PRIu64 " , %" PRIu64 ", %" PRIu64 "\n",
              corenum,
@@ -96,6 +97,18 @@ void application_main_loop(void) {
              wqe_drop_T, wqe_drop_T2);
       return;
     }
+#else
+    cvmx_helper_free_packet_data(work);
+    cvmx_fpa_free(work, packet_pool, 0);
+
+    if (got_work_N > SAMPLE_SIZE) {
+      printf("%d, %" PRIu64 ", %" PRIu64 ", %" PRIu64 ", %" PRIu64 ", %" PRIu64 ", %" PRIu64 "\n",
+             corenum,
+             work_fetch_got_work_T, work_fetch_got_work_T2, got_work_N,
+             work_fetch_no_work_T, work_fetch_no_work_T2, no_work_N);
+      return;
+    }
+#endif
   }
 }
 
