@@ -32,9 +32,15 @@
 *.dSYM/
 
 # OCTEON stamps
-*/obj-linux_64-octeon2/
-/forward/.cstamp-*
-/forward/forward
+/*/obj-*octeon2/
+/*/.cstamp-*
+/*/config/cvmx-config.h
 *-linux_64
-/forward/config/cvmx-config.h
+
+/forward/forward
+/forward/forward-linux_64
+
 /memtest/data/
+
+/inputbm/inputbm
+/inputbm/inputbm-linux_64
