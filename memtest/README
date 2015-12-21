@@ -1,4 +1,4 @@
-# Building
+# Memory tests for OCTEON II
 
 For simple-exec:
    $ make
@@ -9,7 +9,7 @@ For Linux:
 # Running
 
 On simple-exec (for 32 cores):
-   # tftp $loadaddr forward; bootoct $loadaddr coremask=ffffffff
+   # tftp $loadaddr memtest; bootoct $loadaddr coremask=ffffffff
 
 On Linux:
-   # ./forward-linux_64
+   # ./memtest-linux_64
